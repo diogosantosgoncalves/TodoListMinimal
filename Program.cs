@@ -7,6 +7,21 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var corsVr = "_MyAllowSubdomainPolicy";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: corsVr,
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:4200",
+                               $"http://localhost:4200")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        });
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -16,7 +31,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+app.UseCors(corsVr);
+
+// app.UseHttpsRedirection();
 
 var summaries = new[]
 {

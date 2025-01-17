@@ -18,13 +18,14 @@
 
             app.MapGet("/pessoas/{nome}", (string nome) =>
             {
-                return pessoas.Where(i => i.Nome == nome);
+                return pessoas.FirstOrDefault(i => i.Nome == nome);
             });
 
             app.MapPost("/pessoas/", (Pessoa pessoa) =>
             {
+                pessoa.Id = Guid.NewGuid();
                 pessoas.Add(pessoa);
-                return Results.Ok(pessoas);
+                return Results.Ok(pessoa);
             });
 
             app.MapPut("/pessoas/{id:guid}", (Guid id, Pessoa pessoa) =>
